@@ -1,0 +1,185 @@
+% Algoritmo de análise cinemática de mecanismo 4 barras
+% Francisco Jaime da Silva: Engenharia Mecânica (IFPI). 2017
+
+clc; 
+clear;
+close; 
+
+%%%DADOS INICIAIS
+a=25.4;
+b=52.3;
+c=56.4; 
+d=59.2; 
+theta1=0; 
+delta=45; 
+p1=40; 
+theta2=150; 
+delta2=(45)*pi/180;cont=0;	
+p2=30;
+delta_theta_2=(2)*pi/180;									
+n=2*pi/delta_theta_2;							
+theta=zeros(4,n+1);omega=zeros(4,n+1);alpha=zeros(4,n+1);					
+theta(1,1)=theta1; delta_3=(delta)*(pi/180);								 
+p=p1; 									 
+theta(2,1)=40; 						
+theta(2,1)=theta(2,1)*pi/180; 	
+omega(2,1)=1;      		
+alpha(2,1)=0.5;                  
+w=1;i=1;							
+K1=d/a;									
+K4=d/b;
+K5=(c^2-d^2-a^2-b^2)/(2*a*b);
+D=cos(theta(2,i))-K1+K4*cos(theta(2,i))+K5;	 
+E=-2*sin(theta(2,i));
+F=K1+(K4-1)*cos(theta(2,i))+K5;
+if (E^2-4.*D*F<0) 									
+    w=0;
+end 
+
+while w==1     
+
+    theta(3,i)=2*atan((-E-sqrt(E^2-4.*D*F))/(2*D));
+    K2=d/c;
+    K3=(a^2-b^2+c^2+d^2)/(2*a*c);
+    A=cos(theta(2,i))-K1-K2*cos(theta(2,i))+K3;
+    B=-2*sin(theta(2,i));
+    C=K1-(K2+1)*cos(theta(2,i))+K3;
+    theta(4,i)=2*atan((-B-sqrt(B^2-4.*A*C))/(2*A));
+    i=i+1;
+    if (i>n+1)
+        w=0;
+    else
+        omega(2,i)=omega(2,i-1);
+        theta(2,i)=theta(2,i-1)+delta_theta_2;
+        
+        D=cos(theta(2,i))-K1+K4*cos(theta(2,i))+K5;
+        E=-2*sin(theta(2,i));
+        F=K1+(K4-1)*cos(theta(2,i))+K5;
+        if (E^2-4.*D*F<0)
+            w=0;
+        end
+        
+    end
+end		 
+
+%%%PLOTS MOVIMENTO
+XC=[];YC=[];XC1=[];YC1=[];VA_1=[];VB_1=[];VP_1=[];VP_2=[]; AA_1=[]; AB_1=[];
+AP_1=[];AP_2=[];
+
+for k=1:i-1						 
+
+    Xo2=0;
+    Yo2=0;
+    Xo4=Xo2+d*cos(theta(1,1));
+    Yo4=Yo2+d*sin(theta(1,1));
+    xa=Xo2+a*cos(theta(2,k));
+    ya=Yo2+a*sin(theta(2,k));
+    xb=xa+b*cos(theta(3,k));
+    yb=ya+b*sin(theta(3,k));
+    xc=xa+p*cos(theta(3,k)+delta_3);
+    yc=ya+p*sin(theta(3,k)+delta_3);
+    xc_pt2=xa+p2*cos(theta(3,k)-delta_3);
+    yc_pt2=ya+p2*sin(theta(3,k)-delta_3);
+    xELO2=[Xo2 xa];
+    yELO2=[Yo2 ya];
+    xELO3=[xa xb];
+    yELO3=[ya yb];
+    xELO4=[xb Xo4];
+    yELO4=[yb Yo4];
+    xELO1=[Xo4 Xo2];
+    yELO1=[Yo4 Yo2];
+    xc1=[xa xc];
+    yc1=[ya yc];
+    xc2=[xb xc];
+    yc2=[yb yc];
+    XC=[XC,xc];
+    YC=[YC,yc];
+    XC1=[XC1,xc_pt2];
+    YC1=[YC1,yc_pt2];
+    xc_pt2_1=[xa xc_pt2];
+    xc_pt2_2=[ya yc_pt2];
+    xc_pt2_3=[xb xc_pt2];
+    xc_pt2_4=[yb yc_pt2];
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    omega(3,k)=a*omega(2,k)*(sin(theta(4,k)-theta(2,k)))/(b*(sin(theta(3,k)-theta(4,k))));
+    omega(4,k)=a*omega(2,k)*(sin(theta(2,k)-theta(3,k)))/(c*(sin(theta(4,k)-theta(3,k))));
+    
+    VA=[a*omega(2,k)*(-sin(theta(2,k))+j*cos(theta(2,k)))];
+    Va1=abs(VA);
+    VA_1=[VA_1,Va1];
+    VB=c*omega(4,k)*(-sin(theta(4,k))+j*cos(theta(4,k)));
+    Vb1=abs(VB);
+    VB_1=[VB_1,Vb1];
+    VP1=[p1*omega(3,k)*((-sin(theta(3,k)+delta_3))+j*cos((theta(2,k)+delta_3)))];
+    Vp1=abs(VP1);
+    VP_1=[VP_1,Vp1];
+    VP2=[p2*omega(3,k)*((-sin(theta(3,k)+delta_3))+j*cos((theta(2,k)+delta_3)))];
+    Vp2=abs(VP2);
+    VP_2=[VP_2,Vp2];
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    A=c*sin(theta(4,k));
+    B=b*sin(theta(3,k));
+    C=a*alpha(2,k)*sin(theta(2,k))+a*(omega(2,k)^2)*cos(theta(2,k))+b*omega(3,k)^2*cos(theta(3,k))-c*omega(4,k)^2*cos(theta(4,k));
+    D=c*cos(theta(4,k));
+    E=b*cos(theta(3,k));
+    F=a*alpha(2,k)*cos(theta(2,k))-a*omega(2,k)^2*sin(theta(2,k))-b*omega(3,k)^2*sin(theta(3,k))+c*omega(4,k)^2*sin(theta(4,k));
+    alpha(3,k)= (C*D-A*F)/(A*E-B*D);
+    alpha(4,k)= (C*E-B*F)/(A*E-B*D);
+    AA=a*alpha(2,1)*(-sin(theta(2,k))+j*cos(theta(2,k)))-a*omega(2,k)^2*(cos(theta(2,k))+j*sin(theta(2,k)));
+    AA1=abs(AA);
+    AA_1=[AA_1,AA1];
+    AB=c*alpha(4,k)*(-sin(theta(4,k))+j*cos(theta(4,k)))-c*omega(4,k)^2*(cos(theta(4,k))+j*sin(theta(4,k)));
+    AB1=abs(AB);
+    AB_1=[AB_1,AB1];
+    AP1=(p1*alpha(3,1))*((-sin(theta(3,k)+delta_3))+j*cos(theta(3,k)+delta_3))-(p1*(omega(3,k))^2)*((cos(theta(3,k)+delta_3))+j*sin(theta(3,k)+delta_3));
+    Ap1=abs(AP1);
+    AP_1=[AP_1,Ap1];
+    AP2=(p2*alpha(3,1))*((-sin(theta(3,k)+delta_3))+j*cos(theta(3,k)+delta_3))-(p2*(omega(3,k))^2)*((cos(theta(3,k)+delta_3))+j*sin(theta(3,k)+delta_3));
+    Ap2=abs(AP2);
+    AP_2=[AP_2,Ap2];
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    figure(1);
+    plot(Xo2,Yo2,'-ko',xELO2,yELO2,xa,ya,'-.ko',xELO3,yELO3,xb,yb,'-.ko',xELO4,yELO4,Xo4,Yo4,'-.ko',xELO1,yELO1,xc1,yc1,xc2,yc2,'linewidth',1);
+    text(xa,ya,'A');
+    text(xb,yb,'B');
+    text(xc,yc,'P1');
+    text(xc_pt2,yc_pt2,'P2');
+    title('GRÁFICO DO MOVIMENTO', 'Color', 'k')
+    hold on;
+    plot(xc_pt2_1,xc_pt2_2,'-ko',xc_pt2_3,xc_pt2_4,'-ko');
+    xmin=(Xo2-a);
+    xmax=(Xo4+c);
+    ymin=max(Yo2-a, Yo4-c)-p1*cos(delta*pi/180);
+    ymax=max(Yo2+a, Yo4+c)+p1*cos(delta*pi/180);
+    plot( xc,yc, XC,YC,'-.r');
+    plot(xc_pt2,yc_pt2,XC1,YC1,'-.b');
+    axis equal
+    plot([xmin  xmax ]*1.4,[0 0], '-.k', [0 0],[ymin ymax]*1.2,'-.k')
+    hold off;
+    pause (0.5)
+end 							        
+    figure(2);
+        plot(VA_1,'-b');
+        axis([0 200 0 50]);
+        hold on
+        plot(VB_1,'-g');
+        plot(VP_1,'-r');
+        plot(VP_2,'-k');
+        hold off
+        legend({'VA','VB','VP1','VP2'},'FontSize',8)
+        title('VELOCIDADES', 'Color', 'k','FontSize',8)
+        grid on;
+    figure(3);
+        plot(AA_1,'-b');
+        axis([0 200 0 100]);
+        hold on
+        plot(AB_1,'-g');
+        plot(AP_1,'-r');
+        plot(AP_2,'-k');
+        hold off
+        legend({'AA','AB','AP1','AP2'},'FontSize',8)
+        title('ACELERAÇÕES', 'Color', 'k','FontSize',8)
+        grid on;
+    
+
