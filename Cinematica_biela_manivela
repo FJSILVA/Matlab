@@ -1,0 +1,52 @@
+% Algoritmo criado por Francisco Jaime da Silva
+% Análise de posições de mecanismo biela-manivela tipo r-rrt
+% Baseado nas equações de NORTON, Robert L. Cinemática e dinámica dos mecanismos. Porto Alegre: AMGH, 2010. 800 p. ISBN 9788563308191.
+
+clc; close all; clear all;
+
+a=0.254; b=0.523; 
+omega2=4;                                               % Velocidade da barra a em rad/s         
+theta2=degtorad(35);
+
+% Laço de repetição do movimento do mecanismo. Alterar o valor de
+% 2*pi+theta2 para aumentar a quantidade de repetições.
+for theta2=0:0.1:2*pi+theta2
+                                
+% Análise de posições
+    xo=0;                                               % Posição ponto O (Origem)
+    yo=0;
+    
+    ax=xo+a*cos(theta2);                                % Posição ponto A
+    ay=yo+a*sin(theta2);
+    
+    x_barra_a=[xo ax];                                  % Barra A
+    y_barra_a=[yo ay];
+    
+    %----------------------------------------------------------------------
+    beta=asin((a*sin(theta2))/b);                       % Ângulo da barra b
+    
+    bx=[a*cos(theta2)+b*cos(beta)];                     % Posição ponto B
+    by=[0]; 
+    
+    x_barra_b=[ax bx];                                  % Barra B
+    y_barra_b=[ay by];
+    
+    % Plot do mecanismo
+    %----------------------------------------------------------------------
+    plot(xo,yo,'-ko',x_barra_a,y_barra_a,'-ko');        % Plot da barra A 
+    text(ax,ay,'A');
+    hold on
+    plot(ax,ay,'-ro',x_barra_b,y_barra_b,'-ro');        % Plot da barra B
+    text(bx,by,'B');
+   
+    
+    xmin=(xo-1);                                        % Definição de limites dos eixos
+    xmax=(xo+1);
+    ymin=max(yo-1, yo-1)-a*cos(theta2*pi/180);
+    ymax=max(yo+1, yo+1)+a*cos(theta2*pi/180);
+    axis equal      
+    plot([xmin  xmax ]*0.8,[0 0], '-.k', [0 0],[ymin ymax]*0.8,'-.k')
+    hold off;
+        
+    pause(0.1)
+end
