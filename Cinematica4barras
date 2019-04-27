@@ -9,8 +9,6 @@ omega2=4;                                               % Velocidade da barra a 
 theta2=degtorad(35);
 beta2=degtorad(0);                                      % Ângulo da barra d em relação ao referencial O2
 
-VA_1=[];VAx_1=[];VAy_1=[];                              % Inicialização de vetores
-
 % Laço de repetição do movimento do mecanismo. Alterar p valor de
 % 2*pi+theta2 para aumentar a quantidade de repetições.
 for theta2=0:0.1:2*pi+theta2
