@@ -4,7 +4,7 @@
 
 clc; close all; clear all;
 
-a=0.254; b=0.523; c=0.564; d=0.592%(barra fixa);
+a=0.254; b=0.523; c=0.564; d=0.592; %(barra fixa);
 omega2=4;                                               % Velocidade da barra a em rad/s         
 theta2=degtorad(35);
 beta2=degtorad(0);                                      % Ângulo da barra d em relação ao referencial O2
