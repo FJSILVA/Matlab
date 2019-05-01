@@ -2,45 +2,45 @@
 % Análise de posições de mecanismo 4 barras tipo R-RRR 
 % Baseado nas equações de NORTON, Robert L. Cinemática e dinâmica dos mecanismos. Porto Alegre: AMGH, 2010. 800 p. ISBN 9788563308191.
 
-clc; close all; clear all;
+clc; clear all; close all;
 
 a=0.100; b=0.400;c=0.200; d=0.370;
 
-theta=degtorad(39.94);
-beta2=degtorad(-10);
+theta=degtorad(39.94);                              % Ângulo da manivela
+beta2=degtorad(-10);                                % Ângulo da barra d em relação  ao referencial   
 
 %--------------------------------------------------------------------------
 
 for theta=0:0.1:2*pi+theta
-    P1=[0,0];
-    P4=[d*cos(beta2),d*sin(beta2)];
-    P2=[a*cos(theta),a*sin(theta)];
+    P1=[0,0];                                       % Coordenadas do ponto P1 origem
+    P4=[d*cos(beta2),d*sin(beta2)];                 % Coordenadas do ponto P4
+    P2=[a*cos(theta),a*sin(theta)];                 % Coordenadas do ponto P2
 
         e=sqrt(a^2+d^2-2*a*d*cos(theta));
         alfa=asin((sin(theta)*a)/e);
         beta=acos((e^2+c^2-b^2)/(2*e*c));
 
-    P3=[d-c*cos(alfa+beta),c*sin(alfa+beta)];
+    P3=[d-c*cos(alfa+beta),c*sin(alfa+beta)];       % Coordenadas do ponto P3
     %----------------------------------------------------------------------
-    x_barra_1=[P1(1),P2(1)];
+    x_barra_1=[P1(1),P2(1)];                        % Barra 1
     y_barra_1=[P1(2),P2(2)];
     
-    x_barra_4=[P1(1),P4(1)];
-    y_barra_4=[P1(2),P4(2)];
-    
-    x_barra_2=[P2(1),P3(1)];
+    x_barra_2=[P2(1),P3(1)];                        % Barra 2
     y_barra_2=[P2(2),P3(2)];
     
-    x_barra_3=[P4(1),P3(1)];
+    x_barra_3=[P4(1),P3(1)];                        % Barra 3
     y_barra_3=[P4(2),P3(2)];
-    %----------------------------------------------------------------------
-    plot(x_barra_1,y_barra_1,'-ro');
-    hold on
-    plot(x_barra_4,y_barra_4,'-bo');
-    plot(x_barra_2,y_barra_2,'-bo');
-    plot(x_barra_3,y_barra_3,'-bo');
     
-    xmin=(-0.6);                                        % Definição de limites dos eixos
+    x_barra_4=[P1(1),P4(1)];                        % Barra 4
+    y_barra_4=[P1(2),P4(2)];
+    %----------------------------------------------------------------------
+    plot(x_barra_1,y_barra_1,'-ro');                % Plot da barra 1
+    hold on
+    plot(x_barra_2,y_barra_2,'-bo');                % Plot da barra 2
+    plot(x_barra_3,y_barra_3,'-bo');                % Plot da barra 3
+    plot(x_barra_4,y_barra_4,'-bo');                % Plot da barra 4
+    
+    xmin=(-0.6);                                    % Definição de limites dos eixos
     xmax=(0.6);
     ymin=max(-0.6, -0.6)-a*cos(theta*pi/180);
     ymax=max(+0.6, +0.6)+a*cos(theta*pi/180);
