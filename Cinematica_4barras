@@ -4,70 +4,51 @@
 
 clc; close all; clear all;
 
-a=0.254; b=0.523; c=0.564; d=0.592; %(barra fixa);
-omega2=4;                                               % Velocidade da barra a em rad/s         
-theta2=degtorad(35);
-beta2=degtorad(0);                                      % Ângulo da barra d em relação ao referencial O2
+=0.100; b=0.400;c=0.200; d=0.370;
 
-% Laço de repetição do movimento do mecanismo. Alterar p valor de
-% 2*pi+theta2 para aumentar a quantidade de repetições.
-for theta2=0:0.1:2*pi+theta2
-                                
-% Análise de posições
-    xo=0;                                               % Posição ponto O2
-    yo=0;
-    
-    ax=xo+a*cos(theta2);                                % Posição ponto A
-    ay=yo+a*sin(theta2);
-    
-    x_barra_a=[xo ax];                                  % Barra A
-    y_barra_a=[yo ay];
-    
-    O4x=d*cos(beta2);                                   % Posição ponto O4
-    O4y=d*sin(beta2);
-        
-    x_barra_d=[xo O4x];                                 % Barra D
-    y_barra_d=[yo O4y];
-    
+theta=degtorad(39.94);
+beta2=degtorad(-10);
+
+%--------------------------------------------------------------------------
+
+
+
+for theta=0:0.1:2*pi+theta
+    P1=[0,0];
+    P4=[d*cos(beta2),d*sin(beta2)];
+    P2=[a*cos(theta),a*sin(theta)];
+
+        e=sqrt(a^2+d^2-2*a*d*cos(theta));
+        alfa=asin((sin(theta)*a)/e);
+        beta=acos((e^2+c^2-b^2)/(2*e*c));
+
+    P3=[d-c*cos(alfa+beta),c*sin(alfa+beta)];
     %----------------------------------------------------------------------
-    K1=d/a;                                             %Eq. (4.8a)
-    K4=d/b;
-    K5=(c^2-d^2-a^2-b^2)/(2*a*b);                       %Eq. (4.11a)
-											
-    D=cos(theta2)-K1+K4*cos(theta2)+K5;                 % Eq. (4.13)
-    E=-2*sin(theta2);
-    F=K1+(K4-1)*cos(theta2)+K5;
-        
-    theta3=2*atan((-E-sqrt(E^2-4.*D*F))/(2*D));         % Velocidade angular barra b
-    % Para configuração aberta "-sqrt", para configuração fechada "+sqrt"
-    %----------------------------------------------------------------------
-    bx=ax+b*cos(theta3);                                % Coordenadas do ponto B
-    by=ay+b*sin(theta3);	
+    x_barra_1=[P1(1),P2(1)];
+    y_barra_1=[P1(2),P2(2)];
     
-    x_barra_b=[ax bx];                                  % Barra b
-    y_barra_b=[ay by];
+    x_barra_4=[P1(1),P4(1)];
+    y_barra_4=[P1(2),P4(2)];
     
-    %----------------------------------------------------------------------
-    x_barra_c=[bx O4x];                                 % Barra c
-    y_barra_c=[by O4y];
+    x_barra_2=[P2(1),P3(1)];
+    y_barra_2=[P2(2),P3(2)];
     
-    % Plot do mecanismo
+    x_barra_3=[P4(1),P3(1)];
+    y_barra_3=[P4(2),P3(2)];
     %----------------------------------------------------------------------
-    plot(xo,yo,'-ko',x_barra_a,y_barra_a,'-ko');        %`Plot da barra A 
-    text(ax,ay,'A');
+    plot(x_barra_1,y_barra_1,'-ro');
     hold on
-    plot(xo,yo,'-ro',x_barra_d,y_barra_d,'-ro');        % Plot da barra b
-    text(bx,by,'B');
-    plot(ax,ay,'-ko',x_barra_b,y_barra_b,'-ko');        % Plot da barra d
-    plot(O4x,O4y,'-bo',x_barra_c,y_barra_c,'-bo');
-    %text(O4x,O4y,'O4');
-    xmin=(xo-1);                                        % Definição de limites dos eixos
-    xmax=(xo+1);
-    ymin=max(yo-1, yo-1)-a*cos(theta2*pi/180);
-    ymax=max(yo+1, yo+1)+a*cos(theta2*pi/180);
+    plot(x_barra_4,y_barra_4,'-bo');
+    plot(x_barra_2,y_barra_2,'-bo');
+    plot(x_barra_3,y_barra_3,'-bo');
+    
+    xmin=(-0.6);                                        % Definição de limites dos eixos
+    xmax=(0.6);
+    ymin=max(-0.6, -0.6)-a*cos(theta*pi/180);
+    ymax=max(+0.6, +0.6)+a*cos(theta*pi/180);
     axis equal      
     plot([xmin  xmax ]*0.8,[0 0], '-.k', [0 0],[ymin ymax]*0.8,'-.k')
     hold off;
-        
+    
     pause(0.1)
 end
