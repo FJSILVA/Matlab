@@ -4,7 +4,7 @@
 
 clc; close all; clear all;
 
-=0.100; b=0.400;c=0.200; d=0.370;
+a=0.100; b=0.400;c=0.200; d=0.370;
 
 theta=degtorad(39.94);
 beta2=degtorad(-10);
