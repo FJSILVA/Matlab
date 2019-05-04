@@ -1,9 +1,3 @@
-% Algoritmo criado por Francisco Jaime da Silva
-% Análise de posições de mecanismo biela-manivela tipo r-rrt
-% Baseado nas equações de Mechanisms and Robots Analysis with MATLAB.  Marghitu, Dan B. 
-
-clc; close all; clear all;
-
 clc; clear all; close all;
 
 AB=0.5; BC=1;
@@ -37,14 +31,16 @@ x_barra_2=[xB xC];                                  % Barra 2
 y_barra_2=[yB yC];
 
 %--------------------------------------------------------------------------
-plot(x_barra_1,y_barra_1,'-ro');
+plot(x_barra_1,y_barra_1,'-ro',x_barra_2,y_barra_2,'-bo');
 hold on
-plot(x_barra_2,y_barra_2,'-bo');
+text(xA,yA,' A');
+text(xB,yB,' B');
+text(xC,yC,' C');
 hold off
-xlim([-2 2])
-ylim([-2 2])
-
-pause (0.1)
+xlim([-2 2]);                                        % limite do eixo x 
+ylim([-2 2]);                                        % limite do eixo y
+grid on
+pause (0.001)
 
 
 end
