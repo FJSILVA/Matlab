@@ -1,0 +1,72 @@
+clc; clear all; close all;
+
+% 1.0 INICIO
+AD = 7.0 ;
+AB = 3.0 ;
+BC = 8.0 ;
+CD = 5.7 ;
+teta=degtorad(30)
+
+%--------------------------------------------------------------------------
+i = 0;
+M = moviein(12);
+
+for teta=0:0.1:2*pi+teta
+    %POSIÇÃO A
+    xA = 0;
+    yA = 0;
+    
+    %POSIÇÃO D
+    xD = AD;
+    yD = -2;
+
+    %POSIÇÃO B
+    xB = AB*cos(teta);
+    yB = AB*sin(teta);
+    
+    %POSIÇÃO C
+    eqnC1 = '(xC-xB)^2 + (yC-yB)^2 = (BC)^2';
+    eqnC2 = '(xC-xD)^2 + (yC-yD)^2 = (CD)^2';
+    solC = solve(eqnC1,eqnC2,'xC','yC');
+    xC1 = eval(solC.xC(1));
+    xC2 = eval(solC.xC(2));
+    yC1 = eval(solC.yC(1));
+    yC2 = eval(solC.yC(2));
+    
+    if yC1 > yD
+        yC = yC1
+        xC = xC1
+    else
+        yC = yC2
+        xC = xC2
+    end     
+    
+    x_barra_1=[xA xB];
+    y_barra_1=[yA yB];
+    
+    x_barra_2=[xB xC];
+    y_barra_2=[yB yC];
+    
+    x_barra_4=[xA xD];
+    y_barra_4=[yA yD];
+    
+    x_barra_3=[xC xD];
+    y_barra_3=[yC yD];    
+    
+    %----------------------------------------------------------------------
+    plot(x_barra_1,y_barra_1,'-ro',x_barra_2,y_barra_2,'-bo',x_barra_3,y_barra_3,'-bo',x_barra_4,y_barra_4,'-bo')
+    hold on
+    text(xA,yA,'  A (fixo)')
+    text(xB,yB,'  B')
+    text(xC,yC,'  C')
+    text(xD,yD,'  D (fixo)')
+    hold off
+    xlim([-10 15]);                                        % limite do eixo x 
+    ylim([-10 10]);                                        % limite do eixo y
+    grid on
+    pause (0.001)
+
+    i = i + 1;
+    M(:,i) = getframe;
+end
+
