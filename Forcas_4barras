@@ -1,0 +1,136 @@
+% Algoritmo criado por Francisco Jaime da Silva
+% Análise das forças em mecanismo 4 barras tipo R-RRR 
+% Baseado nas equações de NORTON, Robert L. Cinemática e dinâmica dos mecanismos. Porto Alegre: AMGH, 2010. 800 p. ISBN 9788563308191.
+
+clc,close all, clear all;
+format short
+
+a = 0.102; 
+b = 0.305; 
+c =0.178;  
+d = 0.305;   %(fixed link)
+ma = 0.3628; 
+mb = 1.0883; 
+mc = 0.6348; 
+ig2=0.00136;
+ig3=0.01345;
+ig4=0.00429;
+ka = (ig2/ma)^(1/2); 
+kb = (ig3/mb)^(1/2); 
+kc = (ig4/mc)^(1/2);
+rga = 0.0508;       %input('enter the magnitude of the p.v. of the c.g. of link AB from thefixed pivot A : ');
+rgb = 0.1524;       %input('enter the magnitude of the p.v. of the c.g. of link BC from thepivot B : ');
+rgc = 0.0889;       %input('enter the magnitude of the p.v. of the c.g. of link CD from thefixed pivot D : ');
+deltaa = 0;         %input('enter the deviation angle of the p.v. of the c.g. of AB fromthe p.v. of pivot B : ');
+deltab = 0;         %input('enter the deviation angle of the p.v. of the c.g. of BC fromthe p.v. of pivot C(wrt B) : ');
+deltac = 0;         %input('enter the deviation angle of the p.v. of the c.g. of CD fromthe p.v. of pivot C(wrt D) : ');
+theta2 = degtorad(30);        %input('enter the input angle (angle between AB and AD) in degrees :');
+omega2 = 20;         %input('enter the angular velocity of link AB : ');
+alfa2 = 2 ;        %input('enter the angular acceleration of the link AB : ');
+T1 = 0;             %input('enter the load torque : ');
+t=0;
+n=100;
+g=9.81;
+% 
+% t1=[];aG2xG=[];aG2yG=[];aG3xG=[];aG3yG=[];aG4xG=[];aG4yG=[];AG2G=[];AG3G=[];AG4G=[];AAG=[];
+% F12XG=[];F12YG=[];F23XG=[];F23YG=[];F34XG=[];F34YG=[];F14XG=[];F14YG=[];TSG=[];
+% theta3g=[];theta4g=[]
+% for theta2=0:0.1:3*pi
+%--------------------------------------------------------------------------
+
+                          % vetor tempo 
+
+Ax=a*cos(theta2);
+Ay=a*sin(theta2);
+
+S=((a^2)-(b^2)+(c^2)-(d^2))/(2*(Ax-d));
+P=((Ay^2)/(Ax-d)^2)+1;
+Q=(2*Ay*(d-S))/(Ax-d);
+R=((d-S)^2)-(c^2);
+%--------------------------------------------------------------------------
+By=(-Q+sqrt((Q^2)-4*P*R))/(2*P);
+Bx=(S-((2*Ay*By)/(2*(Ax-d))));
+%--------------------------------------------------------------------------
+theta3=(atan((By-Ay)/(Bx-Ax)));
+theta4=(atan(By/(Bx-d)));  
+
+%--------------------------------------------------------------------------
+omega3=-omega2*a*sin(theta4-theta2)/(b*sin(theta4-theta3));
+omega4= omega2*a*sin(theta3-theta2)/(c*sin(theta3-theta4));
+%--------------------------------------------------------------------------
+A=c*sin(theta4);
+B=b*sin(theta3);
+C=a*alfa2*sin(theta2)+a*(omega2^2)*cos(theta2)+b*(omega3^2)*cos(theta3)-c*(omega4^2)*cos(theta4);
+D=c*cos(theta4);
+E=b*cos(theta3);
+F=a*alfa2*cos(theta2)-a*(omega2^2)*sin(theta2)-b*(omega3^2)*sin(theta3)+c*(omega4^2)*sin(theta4);
+%--------------------------------------------------------------------------
+alfa3=(C*D-A*F)/(A*E-B*D);
+alfa4=(C*E-B*F)/(A*E-B*D);
+%--------------------------------------------------------------------------
+AA=a*alfa2*(-sin(theta2)+j*cos(theta2))-a*(omega2^2)*(cos(theta2)+j*sin(theta2));
+% AB=c*alfa4*(-sin(theta4)+j*cos(theta4))-c*(omega4^2)*(cos(theta4)+j*sin(theta4));	
+
+AG2=rga*alfa2*((-sin(theta2))+j*cos(theta2))-rga*(omega2^2)*(cos(theta2)+j*sin(theta2));
+aG2x=real(AG2); 
+aG2y=imag(AG2);
+AG3=(AA)+(rgb*alfa3*(-sin(theta3)+j*cos(theta3))-rgb*(omega3^2)*(cos(theta3)+j*sin(theta3)));
+aG3x=real(AG3);
+aG3y=imag(AG3);
+AG4=rgc*alfa4*((-sin(theta4))+j*cos(theta4))-rgc*(omega4^2)*(cos(theta4)+j*sin(theta4));
+aG4x=real(AG4);
+aG4y=imag(AG4);
+
+
+%--------------------------------------------------------------------------
+AA1=abs(AA); 
+AG2=abs(AG2); 
+AG3=abs(AG3);
+AG4=abs(AG4); 
+%--------------------------------------------------------------------------
+Fg2x=-ma*aG2x;
+Fg2y=-ma*aG2y;
+Fg3x=-mb*aG3x;
+Fg3y=-mb*aG3y;
+Fg4x=-mc*aG4x;
+Fg4y=-mc*aG4y;
+%--------------------------------------------------------------------------
+Tg2=-ig2*alfa2;
+Tg3=-ig3*alfa3;
+Tg4=-ig4*alfa4;
+%--------------------------------------------------------------------------
+
+%--------------------------------------------------------------------------
+A=[-1 0 1 0 0 0 0 0 0;
+    0 -1 0 1 0 0 0 0 0;
+    -rga*sin(theta2) rga*cos(theta2) rga*sin(theta2)-a*sin(theta2) a*cos(theta2)-rga*cos(theta2) 0 0 0 0 -1;
+    0 0 -1 0 1 0 0 0 0;
+    0 0 0 -1 0 1 0 0 0;
+    0 0 -rgb*sin(theta3) rgb*cos(theta3) rgb*sin(theta3)-b*sin(theta3) b*cos(theta3)-rgb*cos(theta3) 0 0 0;
+    0 0 0 0 -1 0 -1 0 0; 
+    0 0 0 0 0 -1 0 -1 0; 
+    0 0 0 0 c*sin(theta4)-rgc*sin(theta4) rgc*cos(theta4)-c*cos(theta4) -rgc*sin(theta4) rgc*cos(theta4) 0 ];
+
+B=[Fg2x;Fg2y-ma*g;Tg2;Fg3x;Fg3y-mb*g;Tg3;Fg4x;Fg4y-mc*g;Tg4+T1];
+
+X=inv(A)*B;
+F12X=X(1)
+F12Y=X(2) 
+F23X=X(3) 
+F23Y=X(4) 
+F34X=X(5) 
+F34Y=X(6)
+F14X=X(7) 
+F14Y=X(8) 
+Ts=X(9)   
+
+% xlswrite('NomeDoArquivoXLS', A);
+
+% disp('sem erros!!')
+
+
+
+
+
+
+
