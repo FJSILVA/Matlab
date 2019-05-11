@@ -8,7 +8,7 @@ format short
 a = 0.102; 
 b = 0.305; 
 c =0.178;  
-d = 0.305;   %(fixed link)
+d = 0.305;                                                                  % (Barra fixa)
 ma = 0.3628; 
 mb = 1.0883; 
 mc = 0.6348; 
@@ -18,16 +18,16 @@ ig4=0.00429;
 ka = (ig2/ma)^(1/2); 
 kb = (ig3/mb)^(1/2); 
 kc = (ig4/mc)^(1/2);
-rga = 0.0508;       %input('enter the magnitude of the p.v. of the c.g. of link AB from thefixed pivot A : ');
-rgb = 0.1524;       %input('enter the magnitude of the p.v. of the c.g. of link BC from thepivot B : ');
-rgc = 0.0889;       %input('enter the magnitude of the p.v. of the c.g. of link CD from thefixed pivot D : ');
-deltaa = 0;         %input('enter the deviation angle of the p.v. of the c.g. of AB fromthe p.v. of pivot B : ');
-deltab = 0;         %input('enter the deviation angle of the p.v. of the c.g. of BC fromthe p.v. of pivot C(wrt B) : ');
-deltac = 0;         %input('enter the deviation angle of the p.v. of the c.g. of CD fromthe p.v. of pivot C(wrt D) : ');
-theta2 = degtorad(30);        %input('enter the input angle (angle between AB and AD) in degrees :');
-omega2 = 20;         %input('enter the angular velocity of link AB : ');
-alfa2 = 2 ;        %input('enter the angular acceleration of the link AB : ');
-T1 = 0;             %input('enter the load torque : ');
+rga = 0.0508;       
+rgb = 0.1524;       
+rgc = 0.0889;       
+deltaa = 0;         
+deltab = 0;         
+deltac = 0;         
+theta2 = degtorad(30);        
+omega2 = 20;         
+alfa2 = 2 ;        
+T1 = 0;             
 t=0;
 n=100;
 g=9.81;
@@ -36,9 +36,7 @@ g=9.81;
 % F12XG=[];F12YG=[];F23XG=[];F23YG=[];F34XG=[];F34YG=[];F14XG=[];F14YG=[];TSG=[];
 % theta3g=[];theta4g=[]
 % for theta2=0:0.1:3*pi
-%--------------------------------------------------------------------------
-
-                          % vetor tempo 
+%--------------------------------------------------------------------------                 
 
 Ax=a*cos(theta2);
 Ay=a*sin(theta2);
@@ -124,9 +122,6 @@ F14X=X(7)
 F14Y=X(8) 
 Ts=X(9)   
 
-% xlswrite('NomeDoArquivoXLS', A);
-
-% disp('sem erros!!')
 
 
 
